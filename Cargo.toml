@@ -1,0 +1,13 @@
+[package]
+authors = ["SugaR256 <kuba.krapiec@outlook.com>"]
+edition = "2018"
+name = "indc"
+version = "0.0.1"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+reqwest = {version = "0.10", features = ["json"]}
+tokio = {version = "0.2", features = ["full"]}
+serde_json = "1.0.57"
+serde = {version = "1.0.114", features = ["derive"]}
