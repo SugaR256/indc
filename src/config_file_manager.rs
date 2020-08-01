@@ -1,6 +1,7 @@
 pub mod cfg {
     use serde::Deserialize;
     use std::fs;
+    use std::io::ErrorKind;
     #[derive(Debug, Deserialize, Clone)]
     #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
     pub struct ConfigFileManager {
@@ -11,7 +12,13 @@ pub mod cfg {
         fn read_config_file() -> String {
             match fs::read_to_string("config.json") {
                 Ok(result) => result,
-                Err(e) => panic!(e.to_string()),
+                Err(e) => match e.kind() {
+                    ErrorKind::NotFound => match fs::write("config.json", DEFAULT_CONFIG) {
+                        Ok(_r) => DEFAULT_CONFIG.to_string(),
+                        Err(e) => panic!(e.to_string()),
+                    },
+                    other_error => panic!(other_error),
+                },
             }
         }
         pub fn construct_config() -> ConfigFileManager {
@@ -22,4 +29,9 @@ pub mod cfg {
             }
         }
     }
+    const DEFAULT_CONFIG: &'static str = r#"{
+    "FMP_API_KEY": "Get your free API key at https://financialmodelingprep.com/developer/docs/",
+    "STOCKS": ["AAPL", "TSLA"]
+}
+"#;
 }
